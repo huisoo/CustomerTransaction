@@ -1,2 +1,2 @@
 #Customer Transaction
-- 카카오페이 과제전형 -
+-카카오 페이 과제전형
