@@ -34,9 +34,9 @@
 ##### 1. @Query를 활용한 native 쿼리로 API를 구현했다.
 
 	SELECT  year, acctNo, sumAmt, account.accountname as name  
-	FROM  
-		(  
-			select substring(transactiondate,1,4) as year, accountnumber as acctNo, sum(cost-fees) as maxcost,   					MAX(sum(cost-fees)) OVER(PARTITION BY substring(transactiondate,1,4)) AS sumAmt  
+	FROM  (  
+			select substring(transactiondate,1,4) as year, accountnumber as acctNo, sum(cost-fees) as maxcost,
+			MAX(sum(cost-fees)) OVER(PARTITION BY substring(transactiondate,1,4)) AS sumAmt  
 			from transaction.transaction  
 			where transaction.iscancel = 'N'   
 			group by substring(transactiondate,1,4), accountnumber   
@@ -64,14 +64,13 @@
 ##### 1. 거래내역에 존재하는 년도를 가져온다
 ##### 2. @Query를 활용한 native Query로 한 해의 지점별 거래금액 합계를 추출한다.
 
-
-select substring(transactiondate,1,4) as year, branch.branchcode as brCode  
-  		, branch.branchname as brname, sum(cost-fees) as sumAmt  
-from transaction, account, branch  
-where transaction.accountnumber = account.accountnumber and branch.branchcode = account.branchcode  
+      SELECT substring(transactiondate,1,4) as year, branch.branchcode as brCode  
+      		, branch.branchname as brname, sum(cost-fees) as sumAmt  
+      FROM transaction, account, branch  
+      WHERE transaction.accountnumber = account.accountnumber and branch.branchcode = account.branchcode  
 		and transaction.iscancel='N' and substring(transactiondate,1,4) = **:year**  
-group by substring(transactiondate,1,4), branch.branchcode  
-order by substring(transactiondate,1,4) asc , sum(cost-fees) desc  
+      GROUP BY substring(transactiondate,1,4), branch.branchcode  
+      ORDER BY substring(transactiondate,1,4) asc , sum(cost-fees) desc  
 
 
 ##### 3. 위 쿼리로 추출된 데이터를 년도 기준으로 리턴하는 JSON을 구성한다.
@@ -83,9 +82,9 @@ order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
 ##### 1. 지점이름을 JSON형태로 입력받는다.
 ##### 2. JPA를 활용하여 입력한 지점명의 Branch클래스를 가져온다(Branch가 미존재시 HTTP Status 404와 주어진 메시지를 전달한다.)
 
-*throw new ResponseStatusException(  
-	HttpStatus.NOT_FOUND, "br code not found error"  
-);*
+    throw new ResponseStatusException(  
+	    HttpStatus.NOT_FOUND, "br code not found error"  
+    );
 
 위 코드를 활용하여 Branch가 null일 때 예외처리를 수행함.
 
