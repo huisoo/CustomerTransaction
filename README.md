@@ -4,18 +4,21 @@
 ### 개발환경
   - Spring boot 2.2.2, Spring Data JPA
   - JDK1.8, MySql
-  - 빌드환경 및 실행 : gradle, Junit  
+  - lombok
+  - 빌드환경 및 실행 : gradle, Junit5  
 
 ### 프로젝트 개요
   - API개발은 기본적으로 RestController를 get방식으로 호출하였으며 Service의 대한 결과 데이터를 JSON으로 리턴한다.
-  - 쿼리의 경우 Spring Data JPA의 @Query, Named Query, Repository에서 사용하는 기본 함수를 적절히 조합하여 개발했다.
+  - 쿼리의 경우 Spring Data JPA의 *@Query, Native Query, JPA Repository*에서 사용하는 기본 함수를 적절히 조합하여 데이터를 추출한다.
     (Group By, partition by 를 이용하는 쿼리의 경우 @Query를 이용한 native Query를 이용했다)
+  - 추출한 데이터를 *for, if, List<Map<String,Object>>, List<Object>* 등을 적절히 이용하여 JSON값을 리턴함.
+  - Input이 있는 API는 @RequestBody Map<String, String> params 를 이용하여 JSON값을 
    
 ### Spring Data JPA를 활용한 엔티티 정의
-#### 과제에서 주어진 데이터를 가지고 엔티티의 관계를 유추하였다.
-- 지점 엔티티는 계좌정보와 1:1의 연관관계를 가진다(계좌하나는 지점하나에서 관리한다)
-- 계좌 엔티티는 거래정보와 1:N의 연관관계를 가진다(계좌하나에 대해 여러 거래내역이 존재한다)
-- 계좌 엔티티와 거래정보는 식별관계를 가진다(계좌 엔티티의 PK가 거래정보 엔티티의 복합키의 일부 칼럼으로 존재한다)  
+#### 과제에서 주어진 데이터를 가지고 엔티티의 관계를 유추하여 *Spring Data JPA 엔티티*를 구성하였다.
+- 지점 엔티티는 계좌정보와 *1:1의 연관관계*를 가진다(계좌하나는 지점하나에서 관리한다)
+- 계좌 엔티티는 거래정보와 *1:N의 연관관계*를 가진다(계좌하나에 대해 여러 거래내역이 존재한다)
+- 계좌 엔티티와 거래정보는 *식별관계*를 가진다(계좌 엔티티의 PK가 거래정보 엔티티의 복합키의 일부 칼럼으로 존재한다)  
  
 ![CustomerTransaction ERD](./src/main/resources/카카오페이ERD.PNG)
 
@@ -46,7 +49,7 @@
 4) 계좌정보에서 거래내역이 있는 계좌를 제거하면 각 연도의 거래내역이 없는 고객을 추출할 수 있다.
    
 #### 3.연도별 관리점별 거래금액 합계를 구하고 합계금액이 큰 순서로 출력하는 API 개발.( 취소여부가 ‘Y’ 거래는 취소된 거래임)
-* /BranchTransactionByYear 호출
+* /BranchTransactionByYear 호출 *
 
 1) 거래내역에 존재하는 년도를 가져온다
 2) @Query를 활용한 native Query로 한 해의 지점별 거래금액 합계를 추출한다.
@@ -72,6 +75,7 @@ order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
 *throw new ResponseStatusException(
 	HttpStatus.NOT_FOUND, "br code not found error"
 );*
+
 위 코드를 활용하여 Branch가 null일 때 예외처리를 수행함.
 
 3) Branch정보로 해당 지점에 속한 계좌를 조회한다(지점과 계좌가 1:1관계로 Class를 지니고 있으므로 JPA활용이 가능하다)
@@ -79,7 +83,7 @@ order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
 
  
 ### UNIT TEST 수행
-#### mockMvc를 각 API 컨트롤러를 호출하는 UNIT TEST를 수행하여 결과를 확인
+#### mockMvc를 각 API 컨트롤러를 호출하는 UNIT TEST를 수행하여 정상 결과가 나옴을 확인함.
 - BranchTransactionByYearTEST.java
 ![BranchTransactionByYearTEST](./src/main/resources/BranchTransactionByYearTest.PNG)
 
