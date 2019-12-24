@@ -72,3 +72,16 @@
 4) 3)에서 조회환 계좌정보를 가지고 거래정보(취소여부:N)인 경우의 합을 구한뒤 API에서 요구하는 JSON형태로 값을 리턴한다.
 
  
+### UNIT TEST 수행
+#### mockMvc를 각 API 컨트롤러를 호출하는 UNIT TEST를 수행하여 결과를 확인
+- BranchTransactionByYearTEST.java
+![BranchTransactionByYearTEST](./src/main/resources/BranchTransactionByYearTEST.PNG)
+
+- EmptyTransactionCustomerByYearTest.java
+![EmptyTransactionCustomerByYearTest](./src/main/resources/EmptyTransactionCustomerByYearTest.PNG)
+
+- MaxCustomerByYearTest.java
+![MaxCustomerByYearTest](./src/main/resources/MaxCustomerByYearTest.PNG)
+
+- TransactionCostByBranchTest.java
+![TransactionCostByBranchTest](./src/main/resources/TransactionCostByBranchTest.PNG)
