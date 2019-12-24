@@ -1,6 +1,6 @@
 # [CUSTOMER TRANSACTION API] 카카오페이 _과제전형
 ## 스프링 부트를 활용하여 주어진 4개의 API를 개발한다.
-=====================================================
+-------------------------------------------------
 ### 개발환경
   - Spring boot 2.2.2, Spring Data JPA
   - JDK1.8, MySql
@@ -39,29 +39,38 @@
  
 #### 2.2018년 또는 2019년에 거래가 없는 고객을 추출하는 API 개발.
 (취소여부가 ‘Y’ 거래는 취소된 거래임)
-       거래가 없는 고객 : 계좌 - 각 년도의 거래내역에 있는 계좌(취소여부가 N인계좌)를 이용
-1) JPA를 기준으로 거래내역에 존재하는 년도를 가져온다
+- 거래가 없는 고객 : 계좌 - 각 년도의 거래내역에 있는 계좌(취소여부가 N인계좌)를 이용
+- /emptyTransactionCustomerByYear 호출
+
+1) 거래내역에 존재하는 년도를 가져온다
 2) JPA를 이용하여 (취소여부가 N인경우와 1)의 해당하는 연도를 기준의 거래정보에서 중복되지 않는 계좌번호를 가져온다
 3) 계좌정보의 계좌번호와 일치하는 2)의 계좌정보를 찾는다.
 4) 계좌정보에서 거래내역이 있는 계좌를 제거하면 각 연도의 거래내역이 없는 고객을 추출할 수 있다.
    
 #### 3.연도별 관리점별 거래금액 합계를 구하고 합계금액이 큰 순서로 출력하는 API 개발.( 취소여부가 ‘Y’ 거래는 취소된 거래임)
-1) 거래가 존재하는 연도를 알기 위해 거래내역에 존재하는 년도를 가져온다 (JPA)
+- /BranchTransactionByYear 호출
+
+1) 거래내역에 존재하는 년도를 가져온다
 2) @Query를 활용한 native Query로 한 해의 지점별 거래금액 합계를 추출한다.
-   	select substring(transactiondate,1,4) as year, branch.branchcode as brCode, branch.branchname as brname, sum(cost-fees) as sumAmt
-	from transaction, account, branch 
-	where transaction.accountnumber = account.accountnumber and branch.branchcode = account.branchcode 
+
+'''
+select substring(transactiondate,1,4) as year, branch.branchcode as brCode, branch.branchname as brname, sum(cost-fees) as sumAmt
+  from transaction, account, branch 
+  where transaction.accountnumber = account.accountnumber and branch.branchcode = account.branchcode 
 		and transaction.iscancel='N' and substring(transactiondate,1,4) = :year
-	group by substring(transactiondate,1,4), branch.branchcode
-	order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
+  group by substring(transactiondate,1,4), branch.branchcode
+  order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
+
+'''
 
 3) 위 쿼리와 년도를 기준으로 리턴하는 JSON을 구성한다.
    
 #### 4.분당점과 판교점을 통폐합하여 판교점으로 관리점 이관을 하였습니다. 지점명을 입력하면 해당지점의 거래금액 합계를 출력하는 API 개발( 취소여부가 ‘Y’ 거래는 취소된 거래임,)
+- /TransactionCostByBranch
 
- 1) 지점이름을 JSON형태로 입력받는다.
- 2) JPA를 활용하여 입력한 지점명의 Branch클래스를 가져온다(Branch가 미존재시 HTTP Status 404와 주어진 메시지를 전달한다.) 
- 3) Branch정보로 해당 지점에 속한 계좌를 조회한다(지점과 계좌가 1:1관계로 Class를 지니고 있으므로 JPA활용이 가능하다)
- 4) 3)에서 조회환 계좌정보를 가지고 거래정보(취소여부:N)인 경우의 합을 구한뒤 API에서 요구하는 JSON형태로 값을 리턴한다.
+1) 지점이름을 JSON형태로 입력받는다.
+2) JPA를 활용하여 입력한 지점명의 Branch클래스를 가져온다(Branch가 미존재시 HTTP Status 404와 주어진 메시지를 전달한다.) 
+3) Branch정보로 해당 지점에 속한 계좌를 조회한다(지점과 계좌가 1:1관계로 Class를 지니고 있으므로 JPA활용이 가능하다)
+4) 3)에서 조회환 계좌정보를 가지고 거래정보(취소여부:N)인 경우의 합을 구한뒤 API에서 요구하는 JSON형태로 값을 리턴한다.
 
  
