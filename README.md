@@ -7,7 +7,7 @@
   - lombok
   - 빌드환경 및 실행 : gradle, Junit5  
 
-### 프로젝트 개요
+### 과제 수행 방법
   - API개발은 기본적으로 RestController를 get방식으로 호출하였으며 Service의 대한 결과 데이터를 JSON으로 리턴함.
   - 쿼리의 경우 Spring Data JPA의 *@Query, Native Query, JPA Repository*에서 사용하는 기본 함수를 적절히 조합하여 데이터를 추출한다.
     (Group By, partition by 를 이용하는 쿼리의 경우 @Query를 이용한 native Query를 이용한다)
@@ -24,8 +24,8 @@
 
 ### 4가지 API 해결 방법
 #### 1. 2018년, 2019년 각 연도별 합계 금액이 가장 많은 고객을 추출하는 API 개발.(단, 취소여부가 ‘Y’ 거래는 취소된 거래임, 합계 금액은 거래금액에서 수수료를 차감한 금액임)
-* /maxCustomerByYear 호출*
-1) @Query를 활용한 native 쿼리로 API를 구현했다.\'
+*/maxCustomerByYear 호출*
+1) @Query를 활용한 native 쿼리로 API를 구현했다.
 	SELECT  year, acctNo, sumAmt, account.accountname as name  
 	FROM  
 		(  
@@ -50,7 +50,7 @@
 4) 계좌정보에서 거래내역이 있는 계좌를 제거하면 각 연도의 거래내역이 없는 고객을 추출할 수 있다.
    
 #### 3.연도별 관리점별 거래금액 합계를 구하고 합계금액이 큰 순서로 출력하는 API 개발.( 취소여부가 ‘Y’ 거래는 취소된 거래임)
-* /BranchTransactionByYear 호출 *
+*/BranchTransactionByYear 호출 *
 
 1) 거래내역에 존재하는 년도를 가져온다
 2) @Query를 활용한 native Query로 한 해의 지점별 거래금액 합계를 추출한다.
@@ -68,7 +68,7 @@ order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
 3) 위 쿼리와 년도를 기준으로 리턴하는 JSON을 구성한다.
    
 #### 4.분당점과 판교점을 통폐합하여 판교점으로 관리점 이관을 하였습니다. 지점명을 입력하면 해당지점의 거래금액 합계를 출력하는 API 개발( 취소여부가 ‘Y’ 거래는 취소된 거래임,)
-* /TransactionCostByBranch *
+*/TransactionCostByBranch 호출*
 
 1) 지점이름을 JSON형태로 입력받는다.
 2) JPA를 활용하여 입력한 지점명의 Branch클래스를 가져온다(Branch가 미존재시 HTTP Status 404와 주어진 메시지를 전달한다.)
