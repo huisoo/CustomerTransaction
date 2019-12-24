@@ -53,7 +53,7 @@
 1) 거래내역에 존재하는 년도를 가져온다
 2) @Query를 활용한 native Query로 한 해의 지점별 거래금액 합계를 추출한다.
 
-'''
+/'
 select substring(transactiondate,1,4) as year, branch.branchcode as brCode  
   		, branch.branchname as brname, sum(cost-fees) as sumAmt  
 from transaction, account, branch  
@@ -61,8 +61,7 @@ where transaction.accountnumber = account.accountnumber and branch.branchcode = 
 		and transaction.iscancel='N' and substring(transactiondate,1,4) = :year  
 group by substring(transactiondate,1,4), branch.branchcode  
 order by substring(transactiondate,1,4) asc , sum(cost-fees) desc  
-
-'''
+/'
 
 3) 위 쿼리와 년도를 기준으로 리턴하는 JSON을 구성한다.
    
