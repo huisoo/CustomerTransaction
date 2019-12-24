@@ -75,7 +75,7 @@
 ### UNIT TEST 수행
 #### mockMvc를 각 API 컨트롤러를 호출하는 UNIT TEST를 수행하여 결과를 확인
 - BranchTransactionByYearTEST.java
-![BranchTransactionByYearTEST](./src/main/resources/BranchTransactionByYearTEST.PNG)
+![BranchTransactionByYearTEST](./src/main/resources/BranchTransactionByYearTest.PNG)
 
 - EmptyTransactionCustomerByYearTest.java
 ![EmptyTransactionCustomerByYearTest](./src/main/resources/EmptyTransactionCustomerByYearTest.PNG)
@@ -84,4 +84,4 @@
 ![MaxCustomerByYearTest](./src/main/resources/MaxCustomerByYearTest.PNG)
 
 - TransactionCostByBranchTest.java
-![TransactionCostByBranchTest](./src/main/resources/TransactionCostByBranchTest.PNG)
+![TransactionCostByBranchTest](./src/main/resources/TransactionCostByBranchTEST.PNG)
