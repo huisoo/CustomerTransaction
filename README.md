@@ -26,6 +26,7 @@
 #### A. 2018년, 2019년 각 연도별 합계 금액이 가장 많은 고객을 추출하는 API 개발.(단, 취소여부가 ‘Y’ 거래는 취소된 거래임, 합계 금액은 거래금액에서 수수료를 차감한 금액임)
 */maxCustomerByYear 호출*
 1. @Query를 활용한 native 쿼리로 API를 구현했다.
+
 	SELECT  year, acctNo, sumAmt, account.accountname as name  
 	FROM  
 		(  
