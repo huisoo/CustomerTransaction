@@ -8,11 +8,11 @@
   - 빌드환경 및 실행 : gradle, Junit5  
 
 ### 프로젝트 개요
-  - API개발은 기본적으로 RestController를 get방식으로 호출하였으며 Service의 대한 결과 데이터를 JSON으로 리턴한다.
+  - API개발은 기본적으로 RestController를 get방식으로 호출하였으며 Service의 대한 결과 데이터를 JSON으로 리턴함.
   - 쿼리의 경우 Spring Data JPA의 *@Query, Native Query, JPA Repository*에서 사용하는 기본 함수를 적절히 조합하여 데이터를 추출한다.
-    (Group By, partition by 를 이용하는 쿼리의 경우 @Query를 이용한 native Query를 이용했다)
-  - 추출한 데이터를 *for, if, List<Map<String,Object>>, List<Object>* 등을 적절히 이용하여 JSON값을 리턴함.
-  - Input이 있는 API는 @RequestBody Map<String, String> params 를 이용하여 JSON값을 
+    (Group By, partition by 를 이용하는 쿼리의 경우 @Query를 이용한 native Query를 이용한다)
+  - 추출한 데이터를 *for, if, List<Map<String,Object>>, List<Object>* 등을 적절히 이용하여 JSON값을 리턴한다.
+  - Input이 있는 API는 @RequestBody Map<String, String> params 를 이용하여 JSON값을 입력받는다.
    
 ### Spring Data JPA를 활용한 엔티티 정의
 #### 과제에서 주어진 데이터를 가지고 엔티티의 관계를 유추하여 *Spring Data JPA 엔티티*를 구성하였다.
@@ -25,7 +25,7 @@
 ### 4가지 API 해결 방법
 #### 1. 2018년, 2019년 각 연도별 합계 금액이 가장 많은 고객을 추출하는 API 개발.(단, 취소여부가 ‘Y’ 거래는 취소된 거래임, 합계 금액은 거래금액에서 수수료를 차감한 금액임)
 * /maxCustomerByYear 호출*
-- @Query를 활용한 native 쿼리로 API를 구현했다.\'
+1) @Query를 활용한 native 쿼리로 API를 구현했다.\'
 	SELECT  year, acctNo, sumAmt, account.accountname as name  
 	FROM  
 		(  
@@ -37,7 +37,8 @@
 	WHERE   T.maxcost = T.sumAmt  
 			and account.accountnumber = T.acctNo  	
 
- 
+2) 1) 쿼리의 추출결과로 API 리턴 값을 만들었다.
+
 #### 2.2018년 또는 2019년에 거래가 없는 고객을 추출하는 API 개발.
 (취소여부가 ‘Y’ 거래는 취소된 거래임)
 - 거래가 없는 고객 : 계좌 - 각 년도의 거래내역에 있는 계좌(취소여부가 N인계좌)를 이용
@@ -72,8 +73,8 @@ order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
 1) 지점이름을 JSON형태로 입력받는다.
 2) JPA를 활용하여 입력한 지점명의 Branch클래스를 가져온다(Branch가 미존재시 HTTP Status 404와 주어진 메시지를 전달한다.)
 
-*throw new ResponseStatusException(
-	HttpStatus.NOT_FOUND, "br code not found error"
+*throw new ResponseStatusException(  
+	HttpStatus.NOT_FOUND, "br code not found error"  
 );*
 
 위 코드를 활용하여 Branch가 null일 때 예외처리를 수행함.
