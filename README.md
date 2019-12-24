@@ -6,6 +6,8 @@
   - JDK1.8, MySql
   - lombok
   - 빌드환경 및 실행 : gradle, Junit5  
+  
+-------------------------------------------------------------------------------------------------------------------
 
 ### 과제 수행 방법
   - API개발은 기본적으로 RestController를 get방식으로 호출하였으며 Service의 대한 결과 데이터를 JSON으로 리턴함.
@@ -13,7 +15,9 @@
     (Group By, partition by 를 이용하는 쿼리의 경우 @Query를 이용한 native Query를 이용한다)
   - 추출한 데이터를 *for, if, List<Map<String,Object>>, List<Object>* 등을 적절히 이용하여 JSON값을 리턴한다.
   - Input이 있는 API는 @RequestBody Map<String, String> params 를 이용하여 JSON값을 입력받는다.
-   
+	
+--------------------------------------------------------------------------------------------------------------
+	
 ### Spring Data JPA를 활용한 엔티티 정의
 #### 과제에서 주어진 데이터를 가지고 엔티티의 관계를 유추하여 *Spring Data JPA 엔티티*를 구성하였다.
 - 지점 엔티티는 계좌정보와 *1:1의 연관관계*를 가진다(계좌하나는 지점하나에서 관리한다)
@@ -22,6 +26,7 @@
  
 ![CustomerTransaction ERD](./src/main/resources/카카오페이ERD.PNG)
 
+--------------------------------------------------------------------------------------------------------------
 ### 4가지 API 해결 방법
 #### A. 2018년, 2019년 각 연도별 합계 금액이 가장 많은 고객을 추출하는 API 개발.(단, 취소여부가 ‘Y’ 거래는 취소된 거래임, 합계 금액은 거래금액에서 수수료를 차감한 금액임)
 */maxCustomerByYear 호출*
@@ -83,9 +88,10 @@ order by substring(transactiondate,1,4) asc , sum(cost-fees) desc
 3. Branch정보로 해당 지점에 속한 계좌를 조회한다(지점과 계좌가 1:1관계로 Class를 지니고 있으므로 JPA활용이 가능하다)
 4. *(3.)*에서 조회환 계좌정보를 가지고 거래정보(취소여부:N)인 경우의 합을 구한뒤 API에서 요구하는 JSON형태로 값을 리턴한다.
 
- 
+----------------------------------------------------------------------------------------------------
+
 ### UNIT TEST 수행
-#### mockMvc를 각 API 컨트롤러를 호출하는 UNIT TEST를 수행하여 정상 결과가 나옴을 확인함.
+#### mockMvc를 각 API 컨트롤러를 호출하는 UNIT TEST(Junit5)를 수행하여 정상 결과가 나옴을 확인함.
 - BranchTransactionByYearTEST.java 연도별 거래금액이 높은 순의 지점
 ![BranchTransactionByYearTEST](./src/main/resources/BranchTransactionByYearTest.PNG)
 
