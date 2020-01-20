@@ -1,4 +1,4 @@
-# [CUSTOMER TRANSACTION API] _과제전형
+# [CUSTOMER TRANSACTION API]
 ## 스프링 부트를 활용하여 주어진 4개의 API를 개발한다.
 
 
